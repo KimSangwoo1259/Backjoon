@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.StringTokenizer;
 
-public class Main {
+public class  Main {
     //현재 최솟값의 위치를 찾고 그뒤로 최대한 기름을 넣고 가기 -> 최솟값보다 왼쪽에서 부터 다시 그중에서의 최솟값을 찾고 그 지점 앞까지 쭉 달리기 반복
 
     public static void main(String[] args) throws IOException {
@@ -24,14 +24,14 @@ public class Main {
 
         int oldMin;
         int curMin;
-        int price = 0;
+        long price = 0L;
         // 초기 값설정
         curMin = minSearch(N,p);
         int temp = 0;
         for (int i = curMin; i < N-1; i++){
             temp += d[i];
         }
-        price += temp * p[curMin];
+        price += (long) temp * (long) p[curMin];
         oldMin = curMin;
         temp = 0;
 
