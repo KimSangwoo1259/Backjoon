@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.StringTokenizer;
-
+// 앞에서 부터 순차적으로 반복문을 돌려 시간초과가 났지만 배열중 최댓값이 맨 앞에있는 경우 반복문을 멈추는 코드를 넣었더니 통과가 되었다. 운이좋았다
+// 하지만 이문제를 더 빠르게 풀기 위해서는 뒤에서부터 max값을 초기화 해 가면서 주식의 이익 값을 구했다면, for문을 한번만 돌렸어도 됐다. 다음부턴 풀기전에 고민을 더 많이 하고 풀어보자
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
