@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.StringTokenizer;
 
-public class  Main {
+public class Main {
     //현재 최솟값의 위치를 찾고 그뒤로 최대한 기름을 넣고 가기 -> 최솟값보다 왼쪽에서 부터 다시 그중에서의 최솟값을 찾고 그 지점 앞까지 쭉 달리기 반복
 
     public static void main(String[] args) throws IOException {
@@ -12,12 +12,12 @@ public class  Main {
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int d[] = new int[N-1]; //거리를 담은 배열
+        long d[] = new long[N-1]; //거리를 담은 배열
         for (int i = 0; i< N-1; i++) {
             d[i] = Integer.parseInt(st.nextToken());
         }
         st = new StringTokenizer(br.readLine());
-        int p[] = new int[N]; //주유하는 지점의 가격을 담은 배열
+        long p[] = new long[N]; //주유하는 지점의 가격을 담은 배열
         for (int i = 0; i< N; i++) {
             p[i] = Integer.parseInt(st.nextToken());
         }
@@ -27,11 +27,11 @@ public class  Main {
         long price = 0L;
         // 초기 값설정
         curMin = minSearch(N,p);
-        int temp = 0;
+        long temp = 0;
         for (int i = curMin; i < N-1; i++){
             temp += d[i];
         }
-        price += (long) temp * (long) p[curMin];
+        price += temp * p[curMin];
         oldMin = curMin;
         temp = 0;
 
@@ -54,7 +54,7 @@ public class  Main {
     }
 
 
-    static int minSearch(int n, int[] arr){
+    static int minSearch(int n, long[] arr){
         int min = 0;
         for(int i = 0; i < n; i++){
             if(arr[min] >arr[i])
