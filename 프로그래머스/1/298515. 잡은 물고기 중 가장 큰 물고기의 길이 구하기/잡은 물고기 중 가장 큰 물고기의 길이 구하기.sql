@@ -1,0 +1,1 @@
+select concat(ifnull(max(length),10),'cm') as max_length from fish_info
