@@ -1,36 +1,38 @@
-import java.io.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
 
-public class Main{
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        Integer n = Integer.valueOf(br.readLine());
-        Map<Integer, Integer> map = new HashMap<>();
-        Integer[] arr = new Integer[n];
-
+        int line = Integer.valueOf(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < n ; i++){
-            arr[i] = Integer.valueOf(st.nextToken());
+        Set<Integer> numSet = new TreeSet<>();
+        List<Integer> numList = new ArrayList<>();
+        for (int i = 0; i < line; i++){
+            int v = Integer.parseInt(st.nextToken());
+            numSet.add(v);
+            numList.add(v);
         }
-        Integer[] copy = Arrays.copyOf(arr, n);
-        Arrays.sort(copy);
-        map.put(copy[0], 0);
+        Map<Integer, Integer> map = new HashMap<>();
+        int value = 0;
+        for (Integer temp : numSet){
+            map.put(temp, value);
+            value++;
+        }
 
-        for (int i = 1; i < n; i++){
-            if(!copy[i].equals(copy[i-1])) {
-                map.put(copy[i], map.get(copy[i - 1]) + 1);
-            }
+        StringBuilder sb = new StringBuilder();
+        for (Integer temp : numList){
+            sb.append(map.get(temp)).append(" ");
         }
-        for (int i = 0; i < n; i++){
-            bw.write(map.get(arr[i]) + " ");
 
-        }
-        bw.flush();
-        bw.close();
+        System.out.println(sb);
+
+
+
+
+
 
     }
 }
