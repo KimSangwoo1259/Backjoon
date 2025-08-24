@@ -1,42 +1,48 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
+
+        int min = 2000000000;
+
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.valueOf(br.readLine());
-        Integer[] arr = new Integer[n];
+        int n = Integer.parseInt(br.readLine());
+
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        for (int i = 0; i < n; i++){
-            arr[i] = Integer.valueOf(st.nextToken());
+        Integer[] arr = new Integer[n];
+
+        for (int i = 0 ; i < n; i ++){
+            int va = Integer.parseInt(st.nextToken());
+            arr[i] = va;
         }
         Arrays.sort(arr);
-        int curVal = 2000000001;
-        int curLeft = 0;
-        int curRight = n-1;
-        int left = 0;
-        int right = n-1;
-        int temp;
-        while(left < right){
-            temp = arr[left] + arr[right];
 
-            if (Math.abs(curVal)> Math.abs(temp)){
-                curVal = temp;
-                curLeft = left;
-                curRight = right;
+        int answerLeft = 0;
+        int answerRight = 100000;
+
+        int left = 0;
+        int right = n - 1;
+
+        while(left < right){
+            int temp = arr[left] + arr[right];
+
+            if (Math.abs(temp) < min){
+                answerLeft = left;
+                answerRight = right;
+                min = Math.abs(temp);
             }
 
-            if (temp == 0)
-                break;
-
-            if (temp < 0)
-                left++;
-            else
+            if (temp >= 0){
                 right--;
-
+            }
+            else {
+                left++;
+            }
         }
-        System.out.println(arr[curLeft] + " " + arr[curRight]);
+        System.out.println(arr[answerLeft] + " " + arr[answerRight]);
     }
 }
