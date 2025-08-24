@@ -1,36 +1,41 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
+
+        int answer = 0;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int n = Integer.valueOf(br.readLine());
-
+        int n = Integer.parseInt(br.readLine());
         Integer[] arr = new Integer[n];
+        Set<Integer> sumSet = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < n; i++){
-            arr[i] = Integer.valueOf(br.readLine());
         }
-        Arrays.sort(arr);
-
-
-        Set<Integer> sums = new HashSet<>();
-        for (int i = 0; i < n; i++){
+          Arrays.sort(arr);
+        for (int i = 0; i< n; i ++){
             for (int j = 0; j < n; j++){
-                sums.add(arr[i] + arr[j]);
+                sumSet.add(arr[i] + arr[j]);
             }
         }
 
-        for (int i = n-1; i >= 0; i--){
+        boolean found = false;
+        // x + y + z = k == x + y = k - z
+        for (int i = n - 1; i >= 0; i--){
             for (int j = 0; j < n; j++){
-                if (sums.contains(arr[i] - arr[j])) {
-                    System.out.println(arr[i]);
-                    return;
+                if (sumSet.contains(arr[i] - arr[j])){
+                    answer = arr[i];
+                    found = true;
+                    break;
                 }
+
             }
+            if (found)
+                break;
         }
+
+        System.out.println(answer);
     }
 }
