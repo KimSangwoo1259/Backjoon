@@ -1,45 +1,44 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.StringTokenizer;
+import java.util.*;
+
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
+
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
+        int answer = -1;
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.valueOf(st.nextToken());
-        int m = Integer.valueOf(st.nextToken());
 
-        Integer[] arr = new Integer[n];
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int[] arr = new int[n];
+
         st = new StringTokenizer(br.readLine());
+
         for (int i = 0; i < n; i++){
-            arr[i] = Integer.valueOf(st.nextToken());
+            arr[i] = Integer.parseInt(st.nextToken());
         }
-        Arrays.sort(arr, Comparator.reverseOrder());
+        int left = 0;
+        int right = 1000000000;
 
-        int start = 0;
-        int end = arr[0];
-        int mid = (start + end) / 2;
-        long sum = 0;
-        while (start <= end){
-
+        while(left <= right){
+            long sum = 0;
+            int mid = (left + right) / 2;
             for (int i = 0; i < n; i++){
-                if (arr[i] - mid <= 0)
-                    break;
-                sum += (arr[i] - mid);
+                sum += Math.max(0, arr[i] - mid);
             }
-            if (sum >= m)
-                start = mid+1;
-            else
-                end = mid - 1;
-            sum = 0;
-            mid = (start + end)/2;
-
-
+            if (sum >= m){
+                answer = mid;
+                left = mid + 1;
+            }
+            else{
+                right = mid - 1;
+            }
         }
+        System.out.println(answer);
 
-        System.out.println(mid);
     }
-
 }
