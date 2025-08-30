@@ -1,48 +1,43 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
+
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         StringTokenizer st = new StringTokenizer(br.readLine());
+        long answer = 0;
+        int k = Integer.parseInt(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
 
-        int k = Integer.valueOf(st.nextToken());
-        int n = Integer.valueOf(st.nextToken());
-
-        Integer[] arr = new Integer[k];
-
+        Long[] arr = new Long[k];
         for (int i = 0; i < k; i++){
-            arr[i] = Integer.valueOf(br.readLine());
+            arr[i] = Long.parseLong(br.readLine());
         }
-        Arrays.sort(arr, Comparator.reverseOrder());
-
+        Arrays.sort(arr,Comparator.reverseOrder());
         long left = 1;
         long right = arr[0];
-        long mid = (left + right) / 2;
-        long ans = -1;
-        long sum;
-        long temp;
         while(left <= right){
-            sum = 0;
-            for (int i = 0; i < k; i++){
-                temp = arr[i] / mid;
-                if (temp == 0)
+            long mid = (left + right) / 2;
+            int temp = 0;
+            for (long v : arr){
+                long add = v / mid;
+                if (add == 0)
                     break;
-                sum += temp;
+                temp += add;
             }
-            if (sum >= n){
-                ans = mid;
+            if (temp >= n){
                 left = mid + 1;
+                answer = mid;
             }
-            else
+            else {
                 right = mid - 1;
-            mid = (left + right) / 2;
-
+            }
         }
-        System.out.println(ans);
 
+        System.out.println(answer);
     }
 }
