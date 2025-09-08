@@ -1,40 +1,46 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
+
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int n = Integer.valueOf(st.nextToken());
-        int m = Integer.valueOf(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        if (m == 0) {
+            System.out.println(0);
+            return;
+        }
+        int ans = 2000000001;
 
         Integer[] arr = new Integer[n];
-        for (int i = 0; i < n; i++){
-            arr[i] = Integer.valueOf(br.readLine());
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
         }
 
         Arrays.sort(arr);
 
         int left = 0;
         int right = 1;
-        int ans = 2000000000;
-        int temp;
-        while (right < n){
-            temp = arr[right] - arr[left];
-            if (temp >= m){
-                ans = Math.min(ans,temp);
-                if (right - left == 1){
-                    right++;
-                }
+
+
+        while (left < n && right < n && (left <= right)) {
+            int dif = arr[right] - arr[left];
+
+            if (dif >= m) {
+                ans = Math.min(ans, dif);
                 left++;
-            }
-            else
+                if (left == right)
+                    right++;
+
+            } else {
                 right++;
+            }
         }
         System.out.println(ans);
-
     }
 }
