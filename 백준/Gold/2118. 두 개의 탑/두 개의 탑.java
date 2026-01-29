@@ -2,54 +2,46 @@ import java.io.*;
 
 public class Main {
 
-
     public static void main(String[] args) throws IOException {
 
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int answer = 0;
-        int[] arr = new int[n];
-        int[] sum = new int[n];
 
-        for (int i = 0; i < n; i++){
-            arr[i] = Integer.parseInt(br.readLine());
+        int n = Integer.parseInt(br.readLine()); // 배열 크기
+
+        int ans = 0;
+        int[] arr = new int[n+1];
+        for (int i = 1; i <= n; i++) {
+            int value = Integer.parseInt(br.readLine());
+            arr[i] = value;
         }
-        sum[0] = arr[0];
-
-        for (int i = 1; i < n; i++){
-            sum[i] = arr[i] + sum[i - 1];
+        int[] sum = new int[n + 1];
+        for (int i = 1; i <= n; i++){
+            sum[i] = sum[i - 1] + arr[i];
         }
+        int left = 1;
+        int right = 1;
+        int sumValue = sum[n];
 
-        int left = 0;
-        int right = 0;
-        int totalSum = sum[n - 1];
-        while(right < n){
-            int minus;
-            if (left == 0){
-                minus = 0;
-            }
-            else {
-                minus = sum[left - 1];
-            }
-            int straight = sum[right] - minus;
-            int reverse = totalSum - straight;
-            if (straight < reverse){
-                right++;
-                answer = Math.max(straight, answer);
-            }
-            else if (reverse < straight){
+        while (right < n && left <= right){
+            int dist = sum[right] - sum[left - 1];
+            int oppDist = sumValue - dist;
+
+            int trueDist = Math.min(dist, oppDist);
+
+            ans = Math.max(ans, trueDist);
+
+            if (dist > oppDist){
                 left++;
-                answer = Math.max(answer, reverse);
+                if (left > right)
+                    right++;
             }
-            else {
-                answer = reverse;
+            else if (dist < oppDist){
+                right++;
+            }
+            else // 둘이 같아면 그게 최대 길이
                 break;
-            }
+
         }
-
-
-        System.out.println(answer);
-
+        System.out.println(ans);
     }
 }
