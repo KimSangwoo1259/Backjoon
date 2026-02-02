@@ -1,78 +1,66 @@
 import java.io.*;
 import java.util.Stack;
 
+
 public class Main {
+
+
     public static void main(String[] args) throws IOException {
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int ans = 0;
 
-        String str = br.readLine();
-
+        char[] str = br.readLine().toCharArray();
         Stack<Character> stack = new Stack<>();
-
-        char temp;
-        char pre;
-        int count = 1;
-        if (str.charAt(0) == '(' || str.charAt(0) == '[') {
-            stack.push(str.charAt(0));
-            if (str.charAt(0) == '(')
-                count *= 2;
-            else
-                count *= 3;
-        }
-        else {
-            System.out.println(ans);
-            return;
-        }
-        pre = str.charAt(0);
-
-        for (int i = 1; i < str.length(); i++){
-            temp = str.charAt(i);
-            if (temp == '('){
-                stack.push(temp);
-                count  *= 2;
-
-            }
-            else if(temp == ')'){
-                if (stack.empty() || stack.peek() != '('){
-                    System.out.println(0);
-                    return;
-                }
-
-                else{
-                    stack.pop();
-                    if (pre == '('){
-                        ans += count;
+        long ans = 0;
+        int roundCount = 0; // ( 의 개수
+        int angleCount = 0; // [ 의 개수
+        char before = ' ';
+        for (int i = 0; i < str.length; i++){
+            char curChar = str[i];
+            switch (curChar){
+                case '(':
+                    stack.push(curChar);
+                    roundCount++;
+                    break;
+                case '[':
+                    stack.push(curChar);
+                    angleCount++;
+                    break;
+                case ')':
+                    if (stack.isEmpty() || stack.peek() != '('){
+                        System.out.println(0);
+                        return;
                     }
-                    count /= 2;
-
-                }
-
-            }
-            else if (temp == '['){
-                stack.push(temp);
-                count *= 3;
-            }
-            else{ //temp -> ]
-                if (stack.empty() || stack.peek() != '[') {
-                    System.out.println(0);
-                    return;
-                }
-                else{
                     stack.pop();
-                    if (pre == '['){
-                        ans += count;
+                    roundCount--;
+                    if (before == '(') {
+                        ans += (long) (2 * Math.pow(2, roundCount) * Math.pow(3, angleCount));
                     }
-                    count /= 3;
-
-                }
+                    break;
+                case ']':
+                    if (stack.isEmpty() || stack.peek() != '['){
+                        System.out.println(0);
+                        return;
+                    }
+                    stack.pop();
+                    angleCount--;
+                    if (before == '[') {
+                        ans += (long) (3 * Math.pow(2, roundCount) * Math.pow(3, angleCount));
+                    }
+                    break;
+                default:
+                    break;
             }
-            pre = temp;
+            before = curChar;
+
         }
-        if (!stack.empty()) {
+        if (!stack.isEmpty()) {
             System.out.println(0);
             return;
         }
+
         System.out.println(ans);
+
+
     }
 }
