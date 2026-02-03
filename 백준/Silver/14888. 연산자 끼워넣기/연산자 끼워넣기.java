@@ -2,54 +2,67 @@ import java.io.*;
 import java.util.StringTokenizer;
 
 public class Main {
-    static BufferedReader br;
-    static BufferedWriter bw;
-    static int[] arr;
+
     static int n;
-    static int max = -1000000001;
-    static int min = 1000000001;
+    static int[] arr;
+    static int p;
+    static int m;
+    static int t;
+    static int d;
+    static int max = Integer.MIN_VALUE;
+    static int min = Integer.MAX_VALUE;
+
+
     public static void main(String[] args) throws IOException {
-        br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        n = Integer.valueOf(br.readLine());
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        n = Integer.parseInt(br.readLine());
         arr = new int[n];
+
         StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i = 0; i < n; i++){
-            arr[i] = Integer.valueOf(st.nextToken());
+            arr[i] = Integer.parseInt(st.nextToken());
         }
-        int[] operator = new int[4];
         st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < 4; i++){
-            operator[i] = Integer.valueOf(st.nextToken());
-        }
 
+        p = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        t = Integer.parseInt(st.nextToken());
+        d = Integer.parseInt(st.nextToken());
 
-        func(0, arr[0],operator[0], operator[1], operator[2], operator[3]);
+        backtrack(1, arr[0]);
+
         System.out.println(max + "\n" + min);
-
     }
-    static void func(int level, int curVal,int add, int sub, int mul, int div) throws IOException {
 
-        if (level == n-1){
-            max = Math.max(max, curVal);
-            min = Math.min(min, curVal);
+     static void backtrack(int l, int value) {
+        if (l == n){
+            max = Math.max(max, value);
+            min = Math.min(min, value);
+            return;
         }
-        int temp = level +1;
-        if (add >0){
-            func(temp, curVal + arr[temp],add-1,sub,mul,div);
+        if (p > 0){
+            p--;
+            backtrack(l + 1,value + arr[l]);
+            p++;
         }
-        if (sub >0){
-            func(temp, curVal - arr[temp],add,sub-1,mul,div);
-        }
-        if (mul >0){
-            func(temp, curVal * arr[temp],add,sub,mul-1,div);
-        }
-        if (div >0){
-            func(temp, curVal / arr[temp],add,sub,mul,div-1);
-        }
-
-
-        return;
+        if (m > 0){
+             m--;
+             backtrack(l + 1,value - arr[l]);
+             m++;
+         }
+        if (t > 0){
+             t--;
+             backtrack(l + 1,value * arr[l]);
+             t++;
+         }
+        if (d > 0){
+             d--;
+             backtrack(l + 1,value / arr[l]);
+             d++;
+         }
 
     }
 }
