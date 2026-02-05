@@ -4,39 +4,64 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int n;
-    static int k;
-    static int[] visited;
+
+
+    static class Node {
+        int x;
+        int count;
+
+        public Node(int x, int count) {
+            this.x = x;
+            this.count = count;
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.valueOf(st.nextToken());
-        k = Integer.valueOf(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
 
-        visited = new int[100001];
-        visited[n] = 1;
-        Queue<Integer> q = new LinkedList<>();
 
-        q.add(n);
+        int ans = 0;
+        boolean[] visited = new boolean[100001];
 
-        while (!q.isEmpty()){
-            int now = q.poll();
-            if (now == k){
-                System.out.println(visited[now] - 1);
-                System.exit(0);
+        visited[n] = true;
+
+        Queue<Node> q = new LinkedList<>();
+        q.add(new Node(n, 0));
+
+        while (!q.isEmpty()) {
+            Node now = q.poll();
+
+            if (now.x == k){
+                ans = now.count;
+                break;
             }
-            int[] next = {now - 1, now + 1, 2 * now};
+            if (now.x > 0){
+                int nx = now.x - 1;
+                if (!visited[nx]){
+                    visited[nx] = true;
+                    q.add(new Node(nx, now.count + 1));
 
-            for (int i = 0; i < 3; i++){
-                if (next[i] < 0 || next[i] >100000)
-                    continue;
-                if (visited[next[i]] == 0) {
-                    q.add(next[i]);
-                    visited[next[i]] = visited[now] + 1;
+                }
+                if (now.x <= 50000){
+                    nx = now.x * 2;
+                    if (!visited[nx]){
+                        visited[nx] = true;
+                        q.add(new Node(nx, now.count + 1));
+                    }
+                }
+            }
+            if (now.x < 100000){
+                int nx = now.x + 1;
+                if (!visited[nx]){
+                    visited[nx] = true;
+                    q.add(new Node(nx, now.count + 1));
                 }
             }
         }
+        System.out.println(ans);
 
 
     }
