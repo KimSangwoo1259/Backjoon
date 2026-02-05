@@ -4,66 +4,69 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int l;
-    static int[][] chess;
-    static boolean[][] visited;
-    static int[] dr = {2, 2, 1, 1, -1, -1, -2, -2};
-    static int[] dc = {-1, 1, -2, 2, -2, 2, 1, -1};
+
+
+    static class Node {
+        int x;
+        int y;
+        int count;
+
+        public Node(int x, int y, int count) {
+            this.x = x;
+            this.y = y;
+            this.count = count;
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int t = Integer.parseInt(br.readLine());
 
-        int t = Integer.valueOf(br.readLine());
+        int[] dr = {-2, -1, 1, 2, 2, 1, -1, -2};
+        int[] dc = {1, 2, 2, 1, -1, -2, -2, -1};
 
-        StringTokenizer st;
+        int ans = 0;
 
-       while (t--> 0){
-            l = Integer.valueOf(br.readLine());
-            chess = new int[l][l];
-            visited = new boolean[l][l];
+        while(t --> 0){
+            int l = Integer.parseInt(br.readLine());
+            boolean[][] visited = new boolean[l][l];
+
+            Queue<Node> q = new LinkedList<>();
+            StringTokenizer st = new StringTokenizer(br.readLine());
+
+            int nightX = Integer.parseInt(st.nextToken());
+            int nightY = Integer.parseInt(st.nextToken());
+
+            visited[nightX][nightY] = true;
+            q.add(new Node(nightX, nightY, 0));
+
             st = new StringTokenizer(br.readLine());
-            int curX = Integer.valueOf(st.nextToken());
-            int curY = Integer.valueOf(st.nextToken());
-            st = new StringTokenizer(br.readLine());
-            int targetX = Integer.valueOf(st.nextToken());
-            int targetY = Integer.valueOf(st.nextToken());
-            Queue<Chess> q = new LinkedList<>();
-            visited[curX][curY] = true;
-            q.add(new Chess(curX, curY, 0));
 
-            while (!q.isEmpty()){
-                Chess now = q.poll();
+            int targetX = Integer.parseInt(st.nextToken());
+            int targetY = Integer.parseInt(st.nextToken());
+
+            while(!q.isEmpty()){
+                Node now = q.poll();
                 if (now.x == targetX && now.y == targetY){
-                    bw.write(now.level + "\n");
+                    ans = now.count;
                     break;
                 }
-                for (int i = 0; i < 8; i++){
-                    int nextX = now.x + dr[i];
-                    int nextY = now.y + dc[i];
-                    if (nextX < 0 || nextX >= l ||nextY < 0 || nextY >= l) continue;
+                for (int i = 0 ; i< 8; i++){
+                    int nx = now.x + dr[i];
+                    int ny = now.y + dc[i];
 
-                    if (!visited[nextX][nextY]) {
-                        q.add(new Chess(nextX, nextY, now.level + 1));
-                        visited[nextX][nextY] = true;
+                    if (nx >= 0 && nx < l && ny >= 0 && ny < l && !visited[nx][ny]){
+                        visited[nx][ny] = true;
+                        q.add(new Node(nx, ny, now.count + 1));
                     }
                 }
+
             }
+            bw.write(ans + "\n");
 
         }
         bw.flush();
         bw.close();
-
-
-
     }
-    static class Chess{
-        int x,y,level;
-
-        Chess(int x, int y, int level){
-            this.x = x;
-            this.y = y;
-            this.level = level;
-        }
-    }
-
 }
