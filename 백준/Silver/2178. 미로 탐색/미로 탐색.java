@@ -4,59 +4,61 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int n;
-    static int m;
-    static int[][] maze;
-    static int[][] count;
-    static int[] dr = {-1, 1, 0, 0};
-    static int[] dc = {0, 0, -1, 1};
+
+
+    static class Node {
+        int x;
+        int y;
+        int count;
+        public Node(int x, int y, int count) {
+            this.x = x;
+            this.y = y;
+            this.count = count;
+        }
+    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        n = Integer.valueOf(st.nextToken());
-        m = Integer.valueOf(st.nextToken());
-
-        maze = new int[n+1][m+1];
-        count = new int[n + 1][m + 1];
-
-        for (int i = 1; i <= n; i++){
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int[] dr = {-1, 0, 1, 0};
+        int[] dc = {0, 1, 0, -1};
+        int ans = 10001;
+        int[][] maze = new int[n][m];
+        boolean[][] visited = new boolean[n][m];
+        for (int i = 0; i < n; i++){
             String str = br.readLine();
-            for (int j = 1; j <=m; j++){
-                maze[i][j] = str.charAt(j - 1) - '0';
+            for (int j = 0; j < m; j++){
+                maze[i][j] = Character.getNumericValue(str.charAt(j));
+
             }
         }
-        count[1][1] = 1;
 
-        Queue<Point> q = new LinkedList<>();
+        Queue<Node> q = new LinkedList<>();
+        visited[0][0] = true;
 
-        q.add(new Point(1, 1));
+        q.add(new Node(0, 0, 1));
 
         while (!q.isEmpty()){
-            Point now = q.poll();
+            Node now = q.poll();
+            if (now.x == n- 1 && now.y == m-1){
+                ans = now.count;
+                break;
+            }
             for (int i = 0; i < 4; i++){
-                int nr = now.r + dr[i];
-                int nc = now.c + dc[i];
-                if (nc <= 0 || nc > m || nr <= 0 || nr > n)
-                    continue;
-                if (maze[nr][nc] == 1 && count[nr][nc] == 0) {
-                    q.add(new Point(nr, nc));
-                    count[nr][nc] = count[now.r][now.c] + 1;
+                int nx = now.x + dr[i];
+                int ny = now.y + dc[i];
+
+                if (nx >= 0 && nx < n && ny>= 0 && ny < m && !visited[nx][ny] && maze[nx][ny] == 1){
+                    visited[nx][ny] = true;
+                    q.add(new Node(nx, ny, now.count + 1));
                 }
             }
 
         }
-        System.out.println(count[n][m]);
+
+        System.out.println(ans);
 
 
-    }
-    static class Point{
-        int r,c;
-
-        Point(int r, int c){
-            this.r = r;
-            this.c = c;
-        }
     }
 }
