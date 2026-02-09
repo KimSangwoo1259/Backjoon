@@ -1,132 +1,118 @@
 import java.io.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static char[][] building;
-    static boolean[][] visited;
-    static boolean[][] fireVisited;
-    static int w;
-    static int h;
-    static int[] dr = {-1, 0, 1, 0};
-    static int[] dc = {0, 1, 0, -1};
-    static boolean exited;;
-    static Queue<Fire> fires;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int t = Integer.valueOf(br.readLine());
-        StringTokenizer st;
-        while (t --> 0){
-            int curTime = 0;
-            st = new StringTokenizer(br.readLine());
-            exited = false;
-            w = Integer.valueOf(st.nextToken());
-            h = Integer.valueOf(st.nextToken());
-            building = new char[h][w];
-            visited = new boolean[h][w];
-            fireVisited = new boolean[h][w];
-            Queue<Person> q = new LinkedList<>();
-            fires = new LinkedList<>();
-            for (int i = 0; i < h; i++){
-                String str = br.readLine();
-                for (int j = 0; j < w; j++){
-                    building[i][j] = str.charAt(j);
-                    if (building[i][j] == '@'){
-                        q.add(new Person(i, j, 0));
-                        visited[i][j] = true;
-                    }
-                    if (building[i][j] == '*'){
-                        fires.add(new Fire(i, j));
-                        fireVisited[i][j] = true;
-                    }
-                }
-            }
-            expand();
-            while (!q.isEmpty()){
-                Person now = q.poll();
-                if (curTime != now.time){
-                    curTime++;
-                    expand();
-                }
-                if (isExited(now)){
-                    bw.write(now.time + "\n");
-                    break;
-                }
-                for (int i = 0; i < 4; i++){
-                    int nX = now.x + dr[i];
-                    int nY = now.y + dc[i];
+    //이미 불이 난칸, 혹은 불이 나려는 칸은 못간다. 미리 불을 옮기고 움직이자.
+    // 탈출 한다는거는 경계 쪽에 도착을 성공해야하고 그 다음 1초뒤에 가능.
+    static class Fire {
+        int x;
+        int y;
 
-                    if (isExited(new Person(nX, nY, now.time + 1))){
-                        bw.write(now.time + 1 + "\n");
-                        exited = true;
-                        break;
-                    }
-
-                    if (building[nX][nY] == '.' && !visited[nX][nY]){
-                        q.add(new Person(nX, nY, now.time + 1));
-                        visited[nX][nY] = true;
-                    }
-                }
-                if (exited)
-                    break;
-            }
-            if (!exited)
-                bw.write("IMPOSSIBLE" + "\n");
-
+        public Fire(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
-        bw.flush();
-        bw.close();
     }
     static class Person {
-        int x,y,time;
+        int x;
+        int y;
+        int time;
 
-        Person(int x, int y, int time){
+        public Person(int x, int y, int time) {
             this.x = x;
             this.y = y;
             this.time = time;
         }
     }
-    static class Fire{
-        int x,y;
-        Fire(int x, int y){
-            this.x = x;
-            this.y = y;
-        }
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Fire fire = (Fire) o;
-            return x == fire.x && y == fire.y;
-        }
+        int t = Integer.parseInt(br.readLine());
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-    }
-    static void expand(){
-        int size = fires.size();
-        for (int i = 0; i < size; i++){
-            Fire now = fires.poll();
-            for (int k = 0; k < 4; k++){
-                int nextI = now.x + dr[k];
-                int nextJ = now.y + dc[k];
-                if (nextI < 0 || nextI >= h || nextJ < 0 || nextJ >= w || building[nextI][nextJ] == '#' || fireVisited[nextI][nextJ])
-                    continue;
-                building[nextI][nextJ] = '*';
-                fires.add(new Fire(nextI, nextJ));
-                fireVisited[nextI][nextJ] = true;
+        int[] dr = {-1, 0, 1, 0};
+        int[] dc = {0, 1, 0, -1};
+
+        while(t --> 0){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int w = Integer.parseInt(st.nextToken());
+            int h = Integer.parseInt(st.nextToken());
+            boolean success = false;
+            char[][] building = new char[h][w];
+            boolean[][] visited = new boolean[h][w];
+            int ans = 0;
+            final String failMessage = "IMPOSSIBLE";
+            Queue<Fire> fireQueue = new LinkedList<>();
+            Queue<Person> personQueue = new LinkedList<>();
+            Queue<Fire> nextFireQueue = new LinkedList<>();
+            Queue<Person> nextPersonQueue = new LinkedList<>();
+
+            for (int i = 0; i < h; i ++){
+                String str = br.readLine();
+                for (int j = 0; j < w; j++){
+                    char temp = str.charAt(j);
+                    building[i][j] = temp;
+                    if (temp == '@'){
+                        personQueue.add(new Person(i, j, 1)); // 계산 편의상 경계에 다다르면 탈출 이라는 가정으로 1로 시작
+                        visited[i][j] = true;
+                    }
+                    else if (temp == '*'){
+                        fireQueue.add(new Fire(i, j));
+                    }
+                }
             }
+            while(!personQueue.isEmpty() || !nextPersonQueue.isEmpty()){
+                while(!fireQueue.isEmpty()){
+                    Fire now = fireQueue.poll();
+
+                    for (int i = 0; i < 4; i++){
+                        int nx = now.x + dr[i];
+                        int ny = now.y + dc[i];
+
+                        if (nx >= 0 && nx <h && ny >= 0 && ny < w && (building[nx][ny] == '.' || building[nx][ny] == '@')){
+                            building[nx][ny] = '*';
+                            nextFireQueue.add(new Fire(nx, ny));
+                        }
+
+                    }
+                }
+                while(!personQueue.isEmpty()){
+                    Person now = personQueue.poll();
+                    if (now.x == h -1 || now.x == 0 || now.y == 0 ||  now.y == w - 1){
+                        success = true;
+                        ans = now.time;
+                        personQueue.clear();
+                        nextPersonQueue.clear();
+                        break;
+                    }
+
+
+                    for (int i = 0; i < 4; i++){
+                        int nx = now.x + dr[i];
+                        int ny = now.y + dc[i];
+                        if (nx >= 0 && nx <h && ny >= 0 && ny < w && building[nx][ny] == '.' && !visited[nx][ny]){
+                            visited[nx][ny] = true;
+                            nextPersonQueue.add(new Person(nx, ny, now.time + 1));
+                        }
+                    }
+                }
+                fireQueue.addAll(nextFireQueue);
+                personQueue.addAll(nextPersonQueue);
+                nextFireQueue.clear();
+                nextPersonQueue.clear();
+            }
+
+            if (success){
+                System.out.println(ans);
+            }
+            else {
+                System.out.println(failMessage);
+            }
+
+
         }
-    }
-    static boolean isExited(Person now){
-        if (now.x < 0 || now.x >= h || now.y < 0 || now.y >= w)
-            return true;
-        return false;
-    }
 
-
+    }
 }
