@@ -4,71 +4,81 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-    static boolean[] visited;
-    static BufferedWriter bw;
-    static int from;
-    static int to;
-    static Queue<Num> q;
+
+    //이미 불이 난칸, 혹은 불이 나려는 칸은 못간다. 미리 불을 옮기고 움직이자.
+    // 탈출 한다는거는 경계 쪽에 도착을 성공해야하고 그 다음 1초뒤에 가능.
+
+
+    static class Number {
+        int value;
+        String command;
+
+        public Number(int value, String command) {
+            this.value = value;
+            this.command = command;
+        }
+    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        int t = Integer.parseInt(br.readLine());
+        while (t --> 0){
+            StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int t = Integer.valueOf(br.readLine());
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
+            int start = Integer.parseInt(st.nextToken());
+            int target = Integer.parseInt(st.nextToken());
+            boolean found = false;
+            String answer = "";
+            Queue<Number> queue = new LinkedList<>();
+            boolean[] visited = new boolean[10000];
 
+            queue.add(new Number(start, ""));
+            visited[start] = true;
 
-
-        StringTokenizer st;
-        while(t --> 0){
-            st = new StringTokenizer(br.readLine());
-            q = new LinkedList<>();
-            from = Integer.valueOf(st.nextToken());
-            to = Integer.valueOf(st.nextToken());
-            visited = new boolean[10000];
-            q.add(new Num(from, new StringBuilder()));
-            visited[from] = true;
-            char[] cmd = {'D', 'S', 'L', 'R'};
-
-            while (!q.isEmpty()){
-                Num now = q.poll();
-                if (now.value == to){
-                    bw.write(now.sb + "\n");
+            while(!queue.isEmpty()){
+                Number now = queue.poll();
+                if (now.value == target){
+                    found = true;
+                    answer = now.command;
                     break;
                 }
-                int[] next = {d(now.value), s(now.value), l(now.value), r(now.value)};
-                for (int i = 0; i < 4; i++){
-                    if (!visited[next[i]]){
-                        visited[next[i]] = true;
-                        q.add(new Num(next[i], new StringBuilder(now.sb).append(cmd[i])));
-                    }
+                int value = now.value;
+
+                int d = (value * 2) % 10000;
+                int s = (value - 1) >= 0 ? value - 1 : 9999;
+
+                int n4 = value % 10;
+                int n3 = (value / 10) % 10;
+                int n2 = (value / 100) % 10;
+                int n1 = (value / 1000) % 10;
+
+                int l = n2 * 1000 + n3 * 100 + n4 * 10 + n1;
+                int r = n4 * 1000 + n1 * 100 + n2 * 10 + n3;
+
+                if (!visited[d]){
+                    queue.add(new Number(d, now.command.concat("D")));
+                    visited[d] = true;
+                }
+                if (!visited[s]){
+                    queue.add(new Number(s, now.command.concat("S")));
+                    visited[s] = true;
+                }
+                if (!visited[l]){
+                    queue.add(new Number(l, now.command.concat("L")));
+                    visited[l] = true;
+                }
+                if (!visited[r]){
+                    queue.add(new Number(r, now.command.concat("R")));
+                    visited[r] = true;
                 }
             }
+            if (found){
+                bw.write(answer + "\n");
+            }
+
         }
         bw.flush();
         bw.close();
-    }
-    static class Num{
-        int value;
-        StringBuilder sb;
 
-        Num(int v, StringBuilder s){
-            this.value = v;
-            this.sb = s;
-        }
-    }
-    static int d(int n){
-        return (n * 2) % 10000;
-    }
-    static int s(int n){
-        if (n == 0)
-            return 9999;
-        return n - 1;
-    }
-    static int l(int n){
-        return (n % 1000) * 10 + n / 1000;
-
-
-    }
-    static int r(int n){
-        return (n % 10) * 1000 + n / 10;
     }
 }
