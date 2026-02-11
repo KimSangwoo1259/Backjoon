@@ -1,35 +1,37 @@
 import java.io.*;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
+
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+        int n = Integer.parseInt(br.readLine());
 
-        int n = Integer.valueOf(br.readLine());
+        int[][] arr = new int[n + 1][2];
 
-        int[][] job = new int[n + 1][2];
-        int[] dp = new int[n + 1];
-
-        StringTokenizer st;
-
-        for (int i = 1; i <= n; i++){
-            st = new StringTokenizer(br.readLine());
-            job[i][0] = Integer.valueOf(st.nextToken());
-            job[i][1] = Integer.valueOf(st.nextToken());
+        for (int i= 1; i <=n; i++){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            arr[i][0] = Integer.parseInt(st.nextToken());
+            arr[i][1] = Integer.parseInt(st.nextToken());
         }
-        for(int i = 1; i <=n; i++){
-            int temp = i + job[i][0] - 1;
-            dp[i] = Math.max(dp[i - 1], dp[i]);
-            if (temp <= n){
-                dp[temp] = Math.max(dp[temp], dp[i-1] + job[i][1]);
+        int[] dp = new int[n + 2];
+
+        for (int i = 1; i <=n; i++){
+            int nextDay = i + arr[i][0];
+            dp[i] = Math.max(dp[i],dp[i-1]);
+            if (nextDay<= n+1){
+                dp[nextDay] = Math.max(dp[nextDay], arr[i][1] + dp[i]);
             }
 
         }
-        System.out.println(dp[n]);
 
-
-
+       System.out.println(Arrays.stream(dp).max().getAsInt());
 
     }
+
 }
+
