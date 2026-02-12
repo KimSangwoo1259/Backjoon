@@ -1,35 +1,31 @@
 import java.io.*;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
 
+        int n = Integer.parseInt(br.readLine());
 
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
 
-        int n = Integer.valueOf(br.readLine());
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        int x;
-
-        for (int i = 0; i < n; i++) {
-            x = Integer.valueOf(st.nextToken());
-            pq.add(x);
+        for (int i = 0; i < n; i++){
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < n; j++){
+                pq.add(Integer.parseInt(st.nextToken()));
+            }
         }
 
-
-
-        for (int i = 1; i < n; i++){
-            st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < n; j++){
-                x = Integer.valueOf(st.nextToken());
-                pq.add(x);
-                pq.poll();
-            }
+        for (int i = 0; i < n - 1; i++){
+            pq.poll();
         }
         System.out.println(pq.poll());
 
-    }
+
+     }
+
 }
