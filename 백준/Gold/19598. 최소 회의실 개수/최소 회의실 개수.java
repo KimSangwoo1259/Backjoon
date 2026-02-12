@@ -1,51 +1,59 @@
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.StringTokenizer;
 
 public class Main {
+
+    static class Room implements Comparable<Room>{
+        int start;
+        int end;
+        @Override
+        public int compareTo(Room o) {
+            return this.end - o.end;
+        }
+
+        public Room(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        int n = Integer.valueOf(br.readLine());
 
-        List<Meeting> meeting = new ArrayList<>();
+        int n = Integer.parseInt(br.readLine());
 
+        Room[] arr = new Room[n];
+        int ans = 1;
+        PriorityQueue<Room> pq = new PriorityQueue<>();
         for (int i = 0; i < n; i++){
-            st = new StringTokenizer(br.readLine());
-            meeting.add(new Meeting(Integer.valueOf(st.nextToken()), Integer.valueOf(st.nextToken())));
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int start = Integer.parseInt(st.nextToken());
+            int end = Integer.parseInt(st.nextToken());
+            arr[i] = new Room(start, end);
         }
-        meeting.sort((o1, o2) -> {
+        Arrays.sort(arr, ((o1, o2) -> {
             if (o1.start == o2.start) return o1.end - o2.end;
             return o1.start - o2.start;
-        });
-
-        PriorityQueue<Meeting> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o.end));
-
-        int ans = 1;
+        }));
 
 
-        for (int i = 0; i < n; i++){
-            if (pq.isEmpty())
-                pq.offer(meeting.get(i));
-            else{
-                Meeting temp = meeting.get(i);
-                while (!pq.isEmpty()){
-                    if (pq.peek().end > temp.start) break;
+        for (int i = 0; i <n; i++){
+            Room now = arr[i];
+
+            if (pq.isEmpty()){
+                pq.add(now);
+            }
+            else {
+                while(!pq.isEmpty() && pq.peek().end <= now.start){
                     pq.poll();
                 }
-                pq.offer(temp);
-                ans = Math.max(ans, pq.size());
+                pq.add(now);
             }
+            ans = Math.max(ans, pq.size());
         }
+
         System.out.println(ans);
-
     }
 }
-class Meeting{
-    int start;
-    int end;
 
-    Meeting(int s, int e){
-        start = s;
-        end = e;
-    }
-}
