@@ -2,33 +2,50 @@ import java.io.*;
 import java.util.PriorityQueue;
 
 public class Main {
+
+    static class AbsoluteNumber implements Comparable<AbsoluteNumber>{
+        int value;
+
+        @Override
+        public int compareTo(AbsoluteNumber other) {
+            int t = Math.abs(this.value);
+            int o = Math.abs(other.value);
+            if (t == o)
+                return this.value > other.value ? 1 : -1;
+            return t - o;
+        }
+
+        public AbsoluteNumber(int value) {
+            this.value = value;
+        }
+    }
+
     public static void main(String[] args) throws IOException {
-
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-        int n = Integer.valueOf(br.readLine());
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> {
-            if (Math.abs(o1) == Math.abs(o2)) {
-                return (o1 < o2) ? -1 : 1;
-            }
-            return Math.abs(o1) < Math.abs(o2) ? -1 : 1;
-        });
-        while (n --> 0){
-            int x = Integer.valueOf(br.readLine());
-            if (x == 0){
+        PriorityQueue<AbsoluteNumber> pq = new PriorityQueue<>();
+        int n = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < n; i++){
+            int num = Integer.parseInt(br.readLine());
+
+            if (num == 0){
                 if (pq.isEmpty())
-                    bw.write(0 + "\n");
+                    sb.append(0);
+
                 else
-                    bw.write(pq.poll() + "\n");
+                    sb.append(pq.poll().value);
+                sb.append("\n");
             }
             else {
-                pq.add(x);
+                pq.add(new AbsoluteNumber(num));
             }
-
         }
-        bw.flush();
-        bw.close();
-    }
+
+        System.out.println(sb);
+
+     }
+
 }
