@@ -1,47 +1,51 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+
+
+    // 먼저푸는것이 좋은문제가 있다 -> 그거먼저, 근데 그게 없다? 그러면 쉬운문제 부터 풀기.
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int n = Integer.valueOf(st.nextToken());
-        int m = Integer.valueOf(st.nextToken());
-        List<Integer>[] lists = new List[n + 1];
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        boolean[] solved = new boolean[n + 1];
         int[] indegree = new int[n + 1];
+        List<Integer>[] graph = new List[n + 1];
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
         for (int i = 1; i <=n; i++){
-            lists[i] = new ArrayList<>();
+            graph[i] = new ArrayList<>();
         }
         for (int i = 0; i < m; i++){
             st = new StringTokenizer(br.readLine());
-            int a = Integer.valueOf(st.nextToken());
-            int b = Integer.valueOf(st.nextToken());
-            lists[a].add(b);
-            indegree[b]++;
-        }
+            int first = Integer.parseInt(st.nextToken());
+            int next = Integer.parseInt(st.nextToken());
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-
-        for (int i = 1; i <=n; i++){
-            if (indegree[i] == 0) pq.offer(i);
+            graph[first].add(next);
+            indegree[next]++;
         }
-        while (!pq.isEmpty()){
-            int now = pq.poll();
-            bw.write(now + " ");
-            for (int next : lists[now]){
-                indegree[next]--;
-                if (indegree[next] == 0){
-                    pq.offer(next);
-                }
+        for (int i = 1; i <= n; i++){
+            if (indegree[i] == 0){
+                pq.add(i);
             }
         }
-        bw.flush();
-        bw.close();
+
+        while(!pq.isEmpty()){
+            Integer now = pq.poll();
+            solved[now] = true;
+            sb.append(now).append(" ");
+
+            for (int v: graph[now]){
+                if (solved[v])
+                    continue;
+                indegree[v]--;
+                if (indegree[v] == 0)
+                    pq.add(v);
+            }
+        }
+        System.out.println(sb);
     }
 }
+
