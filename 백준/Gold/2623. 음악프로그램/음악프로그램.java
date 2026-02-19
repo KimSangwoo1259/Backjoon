@@ -2,66 +2,76 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
+
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
+        StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int n = Integer.valueOf(st.nextToken());
-        int m = Integer.valueOf(st.nextToken());
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
 
-        List<Integer>[] lists = new List[n+1];
-        List<Integer> answer = new ArrayList<>();
-        for (int i = 1; i <= n; i++){
-            lists[i] = new ArrayList<>();
-        }
-        Queue<Integer> queue = new LinkedList<>();
+        List<Integer>[] list = new List[n + 1];
+        boolean[] visited = new boolean[n + 1];
         int[] indegree = new int[n + 1];
-        int[] check = new int[n + 1];
+
+        Queue<Integer> queue = new LinkedList<>();
+        Queue<Integer> answer = new LinkedList<>();
+        for (int i = 1; i <=n; i++){
+            list[i] = new ArrayList<>();
+        }
+
         for (int i = 0; i < m; i++){
             st = new StringTokenizer(br.readLine());
-            int num = Integer.valueOf(st.nextToken());
-            int front = Integer.valueOf(st.nextToken());
-            for (int j = 0; j < num -1; j++){
-                int end = Integer.valueOf(st.nextToken());
-                lists[front].add(end);
-                indegree[end]++;
-                front = end;
+            int t = Integer.parseInt(st.nextToken());
+
+            int before = Integer.parseInt(st.nextToken());
+
+            for (int j = 1; j < t; j++){
+                int temp = Integer.parseInt(st.nextToken());
+                list[before].add(temp);
+                indegree[temp]++;
+                before = temp;
             }
         }
         for (int i = 1; i <= n; i++){
-            if (indegree[i] == 0) queue.add(i);
+            if (indegree[i] == 0) queue.offer(i);
         }
-
-        while (!queue.isEmpty()){
-            int now = queue.poll();
-            check[now] = 1;
+        while(!queue.isEmpty()){
+            Integer now = queue.poll();
+            visited[now] = true;
             answer.add(now);
             if (answer.size() > n){
                 System.out.println(0);
                 return;
             }
-            for (int next: lists[now]){
-                if (check[next] == 1) continue;
+            for (Integer v: list[now]){
+                if (visited[v]) continue;
+                indegree[v]--;
+                if (indegree[v] == 0){
+                    queue.add(v);
+                }
 
-                indegree[next]--;
-                if (indegree[next] == 0)
-                    queue.add(next);
             }
         }
         for (int i = 1; i <= n; i++){
-            if (check[i] == 0){
+            if (!visited[i]) {
                 System.out.println(0);
                 return;
             }
         }
-        for (int i = 0; i < n; i++){
-            bw.write(answer.get(i) + "\n");
 
+        while(!answer.isEmpty()){
+            sb.append(answer.poll()).append("\n");
         }
-        bw.flush();
-        bw.close();
+        System.out.println(sb);
+
+
+
+
+
 
     }
 }
+
