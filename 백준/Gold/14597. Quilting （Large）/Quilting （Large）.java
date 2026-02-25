@@ -1,51 +1,65 @@
 import java.io.*;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.util.*;
+
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int h = Integer.valueOf(st.nextToken());
-        int w = Integer.valueOf(st.nextToken());
-        final int INF = 1000000000;
-        int[][] sec1 = new int[h + 1][w + 1];
-        int[][] sec2 = new int[h + 1][w + 1];
-        for (int i = 0; i <= h; i++){
-            Arrays.fill(sec1[i], 256);
-            Arrays.fill(sec2[i], 256);
+
+        int h = Integer.parseInt(st.nextToken());
+        int w = Integer.parseInt(st.nextToken());
+
+        int[][] b1 = new int[h][w];
+        int[][] b2 = new int[h][w];
+        int[][] dp = new int[h][w];
+
+        for (int i = 0; i < h; i++){
+            st = new StringTokenizer(br.readLine());
+            for (int j = 0; j < w; j++){
+                b1[i][j] = Integer.parseInt(st.nextToken());
+            }
         }
 
-        for (int i = 1; i <= h; i++){
+        for (int i = 0; i < h; i++){
             st = new StringTokenizer(br.readLine());
-            for (int j = 1; j <= w; j++){
-                sec1[i][j] = Integer.valueOf(st.nextToken());
+            for (int j = 0; j < w; j++){
+                b2[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        for (int i = 1; i <= h; i++){
-            st = new StringTokenizer(br.readLine());
-            for (int j = 1; j <= w; j++){
-                sec2[i][j] = Integer.valueOf(st.nextToken());
-            }
-        }
-        int[][] dp = new int[h + 1][w + 1];
 
-        for (int i = 0; i <= h; i++){
-            Arrays.fill(dp[i], INF);
+        for (int i = 0; i < w; i++){
+            dp[0][i] = getPow(b1[0][i], b2[0][i]);
         }
-        for (int i = 1; i <= w; i++){
-            dp[1][i] = (sec1[1][i] - sec2[1][i]) * (sec1[1][i] - sec2[1][i]);
-        }
-        for (int i = 2; i <= h; i++){
-            for (int j = 1; j <= w; j++){
-                if (j != w)
-                    dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i - 1][j - 1]), dp[i - 1][j + 1]) + (sec1[i][j] - sec2[i][j]) * (sec1[i][j] - sec2[i][j]);
-                else
-                    dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j - 1]) + (sec1[i][j] - sec2[i][j]) * (sec1[i][j] - sec2[i][j]);
+
+        for (int i = 1; i < h; i++){
+            for (int j = 0; j < w; j++){
+                if (w == 1){
+                    dp[i][j] = dp[i - 1][j] + getPow(b1[i][j], b2[i][j]);
+                }
+
+                else {
+                    if (j == 0) {
+                        dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j + 1]) + getPow(b1[i][j], b2[i][j]);
+                    } else if (j == w - 1) {
+                        dp[i][j] = Math.min(dp[i - 1][j], dp[i - 1][j - 1]) + getPow(b1[i][j], b2[i][j]);
+
+                    } else {
+                        dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i - 1][j + 1])) + getPow(b1[i][j], b2[i][j]);
+                    }
+                }
             }
         }
-        System.out.println(Arrays.stream(dp[h]).min().getAsInt());
+
+        System.out.println(Arrays.stream(dp[h-1]).min().getAsInt());
 
     }
+    static int getPow(int a, int b){
+        return (a - b) * (a - b);
+    }
+
+
+
+
 }
