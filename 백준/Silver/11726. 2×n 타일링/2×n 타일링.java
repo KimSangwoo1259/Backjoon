@@ -1,21 +1,30 @@
 import java.io.*;
 
+
 public class Main {
+
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.valueOf(br.readLine());
-        long dp[] = new long[n + 1];
+        StringBuilder sb = new StringBuilder();
 
-        int mod = 10007;
+        int n = Integer.parseInt(br.readLine());
 
-        dp[0] = 1;
+        if (n == 1){
+            System.out.println(1);
+            return;
+        }
+        int[] dp = new int[n + 1];
         dp[1] = 1;
-        for (int i = 2; i <= n; i++){
-            dp[i] = (dp[i - 1] + dp[i - 2]) % mod;
+        dp[2] = 2;
+        for (int i = 3; i <= n; i++){
+            dp[i] = (dp[i - 1] + dp[i - 2]) % 10007;
         }
 
-        System.out.println(dp[n] % mod);
+        System.out.println(dp[n]);
+
+
 
     }
+
 }
-// 세로막대기로 시작하는 경우, 가로막대기 2개로 시작하는경우
