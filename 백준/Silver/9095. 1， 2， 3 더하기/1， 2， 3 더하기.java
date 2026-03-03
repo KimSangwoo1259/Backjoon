@@ -1,27 +1,31 @@
 import java.io.*;
 
+
 public class Main {
+
+
     public static void main(String[] args) throws IOException {
-        int dp[] = new int[11];
-        dp[0] = 1;
-        dp[1] = 2;
-        dp[2] = 4;
-        for(int i = 3; i < dp.length; i++){
-            dp[i] = dp[i-1] + dp[i-2] + dp[i-3];
-        }
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringBuilder sb = new StringBuilder();
 
-        int T = Integer.valueOf(br.readLine());
-        int index[] = new int[T];
-        for (int i = 0; i < T; i++){
-            index[i] = Integer.valueOf(br.readLine());
+        int t = Integer.parseInt(br.readLine());
+
+        int[] dp = new int[12];
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 4; // 1 1 1  /1 2/ 2 1 / 3
+
+        for (int i = 4; i <= 11; i++){
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
         }
 
-        for (int i = 0; i < T; i++){
-            bw.write(String.valueOf(dp[index[i]-1]) + '\n');
+        while(t --> 0){
+            int n = Integer.parseInt(br.readLine());
+            sb.append(dp[n]).append("\n");
         }
-        bw.flush();
-        bw.close();
+
+        System.out.println(sb);
+
     }
+
 }
