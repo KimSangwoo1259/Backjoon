@@ -1,31 +1,50 @@
 import java.util.*;
 
+
 class Solution {
     public String solution(int[] numbers) {
-        StringBuilder answer = new StringBuilder();
-        PriorityQueue<Num> pq = new PriorityQueue<>();
-        for (int number : numbers) {
-            pq.add(new Num(number));
-        }
-        while (!pq.isEmpty()) {
-            Num num = pq.poll();
-            answer.append(num.value);
-        }
+        StringBuilder sb = new StringBuilder();
 
-        if (answer.charAt(0) == '0')
+        List<Num> numList = new ArrayList<>();
+        
+        boolean onlyZero = true;
+        for (int i = 0; i < numbers.length; i++){
+            if (numbers[i] != 0)
+                onlyZero = false;
+            numList.add(new Num(String.valueOf(numbers[i])));
+        }
+        if (onlyZero)
             return "0";
 
-        return answer.toString();
-    }
-    static class Num implements Comparable<Num> {
-        String value;
-        public Num(int value) {
-            this.value = String.valueOf(value);
+        numList.sort((n1, n2) -> {
+            int first = Integer.parseInt(n1.value + n2.value);
+            int second = Integer.parseInt(n2.value + n1.value);
+
+            return second - first;
+        });
+
+        for (int i = 0; i < numList.size(); i++){
+            sb.append(numList.get(i).value);
         }
+        
+
+
+
+        return sb.toString();
+    }
+    class Num implements Comparable<Num>{
+        String value;
 
         @Override
         public int compareTo(Num o) {
-           return Integer.parseInt(o.value+this.value) - Integer.parseInt(this.value+o.value);
+            int first = Integer.parseInt(this.value + o.value);
+            int second = Integer.parseInt(o.value + this.value);
+
+            return second - first;
+        }
+
+        public Num(String value) {
+            this.value = value;
         }
     }
 }
