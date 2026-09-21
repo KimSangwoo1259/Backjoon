@@ -1,61 +1,62 @@
 import java.util.*;
 
-
 class Solution {
     public int solution(String s) {
         int answer = 0;
-        final int LEN = s.length();
-        String[] sList = new String[LEN];
-        for (int i = 0; i < LEN; i++) {
-            StringBuilder sb = new StringBuilder();
-            String front = s.substring(0, i);
-            String back = s.substring(i);
-            sb.append(back);
-            sb.append(front);
-            sList[i] = sb.toString();
+        StringBuilder sb = new StringBuilder(s);
+        
+        for (int i = 0; i < sb.length(); i++){
+            if (isCorrect(sb.toString()))
+                answer++;
+
+            char left = sb.charAt(0);
+            sb.deleteCharAt(0);
+            sb.append(left);
         }
         
-        for(String str : sList){
-            if(isRight(str))
-                answer++;
-        }
-
         return answer;
     }
-
-    public boolean isRight(String s) {
-        if (s.length() % 2 != 0) {
-            return false;
-        }
-        
+    
+    public boolean isCorrect(String s){
         Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(' || s.charAt(i) == '{' || s.charAt(i) == '[') {
-                stack.push(s.charAt(i));
-            } else {
-                if (stack.isEmpty())
-                    return false;
-                if (s.charAt(i) == ')') {
-                    if (stack.peek() == '(')
+        
+        for (int i = 0; i < s.length(); i++){
+            char now = s.charAt(i);
+            
+            if (stack.isEmpty()){
+                stack.push(now);
+            }
+            else {
+                if (now == ')'){
+                    if (stack.peek() == '('){
                         stack.pop();
-                    else
+                    }
+                    else {
                         return false;
-                } else if (s.charAt(i) == '}') {
-                    if (stack.peek() == '{')
+                    }
+                }
+                else if (now == '}'){
+                    if (stack.peek() == '{'){
                         stack.pop();
-                    else
+                    }
+                    else {
                         return false;
-                } else if (s.charAt(i) == ']') {
-                    if (stack.peek() == '[')
+                    }
+                }
+                else if (now == ']'){
+                    if (stack.peek() == '['){
                         stack.pop();
-                    else
+                    }
+                    else {
                         return false;
+                    }
+                }
+                else {
+                    stack.push(now);
                 }
             }
-
         }
         return stack.isEmpty();
-
 
     }
 }
