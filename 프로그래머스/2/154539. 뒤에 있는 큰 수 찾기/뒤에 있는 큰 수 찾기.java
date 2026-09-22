@@ -2,28 +2,33 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] numbers) {
-        final int LEN = numbers.length;
-            int[] answer = new int[LEN];
-            answer[LEN - 1] = -1;
-            Stack<Integer> st = new Stack<>();
-            st.push(numbers[LEN - 1]);
-
-            for (int i = LEN -2; i >=0; i--){
-                while (!st.isEmpty()){
-                    if (st.peek() > numbers[i]){
-                        answer[i] = st.peek();
-                        break;
-                    }
-                    else {
-                        st.pop();
-                    }
+        int len = numbers.length;
+        int[] answer = new int[len];
+        answer[len - 1] = -1;
+        Stack<Integer> stack = new Stack<>();
+        stack.push(numbers[len - 1]);
+        
+        for (int i = len - 2; i >=0; i--){
+            while(!stack.isEmpty()){
+                if (numbers[i] < stack.peek()){
+                    answer[i] = stack.peek();
+                    break;
                 }
-                if (st.isEmpty())
-                    answer[i] = -1;
-                st.push(numbers[i]);
-
+                else {
+                    stack.pop();
+                }
             }
-            return answer;
+            
+            if (stack.isEmpty()){
+                answer[i] = -1;
+            }
+            stack.push(numbers[i]);
+        }
+                
+        return answer;
     }
+
 }
-// 뒤에서 부터 -1 
+
+
+
