@@ -1,28 +1,35 @@
+import java.util.*;
+
 class Solution {
     public int solution(int[] topping) {
         int answer = 0;
-        int[] countToppingLeft = new int[10001];
-        int[] countToppingRight = new int[10001];
-        int index = 0;
-        int leftCount = 0;
-        int rightCount = 0;
-        for (int i = 0; i < topping.length; i++){
-            if (countToppingRight[topping[i]] == 0){
-                rightCount++;
-            }
-            countToppingRight[topping[i]]++;
+        int len = topping.length;
+        int[] toppingCount1 = new int[10001];
+        int[] toppingCount2 = new int[10001];
+
+        Set<Integer> toppingMap1 = new HashSet<>();
+        Set<Integer> toppingMap2 = new HashSet<>();
+        
+        for (int i = 0; i < len; i++){
+            toppingCount2[topping[i]]++;
+            toppingMap2.add(topping[i]);
         }
-        while (index < topping.length){
-            if (countToppingLeft[topping[index]] == 0)
-                leftCount++;
-            countToppingLeft[topping[index]]++;
-            countToppingRight[topping[index]]--;
-            if (countToppingRight[topping[index]] == 0)
-                rightCount--;
-            if (leftCount == rightCount)
+        
+        for (int i = 0; i < len; i++){
+            int now = topping[i];
+            
+            toppingCount1[now]++;
+            toppingCount2[now]--;
+            toppingMap1.add(now);
+            if (toppingCount2[now] == 0)
+                toppingMap2.remove(now);
+            
+            if (toppingMap1.size() == toppingMap2.size())
                 answer++;
-            index++;
+            
+            
         }
+        
         return answer;
     }
 }
