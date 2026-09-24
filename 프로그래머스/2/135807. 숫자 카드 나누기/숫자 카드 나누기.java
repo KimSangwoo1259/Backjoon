@@ -1,44 +1,73 @@
 class Solution {
     public int solution(int[] arrayA, int[] arrayB) {
         int answer = 0;
-        int gcdA = getGcd(arrayA);
-        int gcdB = getGcd(arrayB);
-        
+
         boolean a = true;
         boolean b = true;
-        
+
+        int gcdA = getGcdFromArray(arrayA);
+        int gcdB = getGcdFromArray(arrayB);
+        //case1 (A 의 최대 공약수로 B를 나누기)
         for (int i = 0; i < arrayB.length; i++){
-            if (arrayB[i] % gcdA == 0) {
+            if (arrayB[i] % gcdA == 0){
                 a = false;
                 break;
             }
         }
+
+
+
+
+        //case2
         for (int i = 0; i < arrayA.length; i++){
-            if (arrayA[i] % gcdB == 0) {
+            if (arrayA[i] % gcdB == 0){
                 b = false;
                 break;
             }
         }
-        if (a && b)
+
+        if (a && b){
             answer = Math.max(gcdA, gcdB);
-        else if (a && !b)
-            answer = gcdA;
+        }
         else if (!a && b)
             answer = gcdB;
-        else
-            answer = 0;
-        return answer;
+        else if (a && !b)
+            answer = gcdA;
 
+        return answer;
     }
-    public static int getGcd(int a, int b){
-        if (b == 0) return a;
-        return getGcd(b, a % b);
-    }
-    public static int getGcd(int[] arr){
-        int result = arr[0];
-        for (int i = 1; i < arr.length; i++){
-            result = getGcd(result, arr[i]);
+
+    public int getGcdFromArray(int[] arr){
+        if (arr.length == 1)
+            return arr[0];
+
+        int gcd = getGcd(arr[0], arr[1]);
+
+        for (int i = 2; i < arr.length; i++){
+            gcd = getGcd(gcd, arr[i]);
         }
-        return result;
+
+        return gcd;
+    }
+    public int getGcd(int a, int b){
+        if (a < b){
+            while(a > 0){
+                int r = b % a;
+                b = a;
+                a = r;
+            }
+            return b;
+        }
+        else if (b < a){
+            while(b > 0){
+                int r = a % b;
+                a = b;
+                b = r;
+            }
+            return a;
+        }
+        else {
+            return a;
+        }
     }
 }
