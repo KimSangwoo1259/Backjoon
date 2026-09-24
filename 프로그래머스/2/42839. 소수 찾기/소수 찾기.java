@@ -1,56 +1,53 @@
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 class Solution {
-     boolean[] used;
+    boolean[] used;
+    Set<Integer> numSet;
     StringBuilder sb;
-    Set<Integer> set;
     String num;
-    int answer;
     public int solution(String numbers) {
-        answer = 0;
-        num = numbers;
-        used = new boolean[num.length()];
-        set = new HashSet<>();
+        used = new boolean[numbers.length()];
+        numSet = new HashSet<>();
         sb = new StringBuilder();
-        
+        num = numbers;
+        int answer = 0;
         back();
-
+        for (int num : numSet){
+            if (isPrime(num))
+                answer++;
+        }
         return answer;
     }
 
-    void back(){
-        for (int i = 0; i < num.length(); i++) {
-            if (used[i]) continue;
-
-            sb.append(num.charAt(i));
-            used[i] = true;
-
-            int n = Integer.parseInt(sb.toString());
-        
-            if (!set.contains(n)) {
-                set.add(n);
-                if (isPrime(n))
-                    answer++;
-            }
-            if (sb.length() != num.length())
-                back();
-
-            used[i] = false;
-            sb.deleteCharAt(sb.length() - 1);
-        }
-    }
-
-    boolean isPrime(int n){
-        if (n < 2)
+    public boolean isPrime (int value){
+        if (value < 2)
             return false;
 
         boolean isPrime = true;
-        for(int i = 2; i <= Math.sqrt(n); i++){
-            if(n % i == 0){
+
+        for (int i = 2 ; i <= Math.sqrt(value); i++){
+            if (value % i == 0){
                 isPrime = false;
                 break;
             }
         }
         return isPrime;
+    }
+
+    public void back() {
+        for (int i = 0; i < used.length; i++){
+            if (used[i])
+                continue;
+            sb.append(num.charAt(i));
+            used[i] = true;
+            numSet.add(Integer.parseInt(sb.toString()));
+
+            if (sb.length() != num.length()){
+                back();
+            }
+            used[i] = false;
+            sb.deleteCharAt(sb.length() - 1);
+        }
     }
 }
