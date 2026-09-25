@@ -1,29 +1,30 @@
-import java.util.*;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+
 class Solution {
     public int solution(int n, int k, int[] enemy) {
-        final int LEN = enemy.length;
-        int sum = 0;
-        int remainK = k;
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder()); // 최대 힙
-
-        for (int i = 0; i < LEN; i++){
-            pq.add(enemy[i]);
-            if (sum + enemy[i] > n){
-                if (remainK == 0){
-                    return i;
-                }
-                else {
-                    remainK--;
-                    sum += enemy[i];
-                    sum -= pq.peek();
-                    pq.poll();
+        int answer = 0;
+        PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
+        for (int i = 0; i < enemy.length;i ++){
+            int nowEnemy = enemy[i];
+            n -= nowEnemy;
+            pq.add(nowEnemy);
+            if (n< 0){
+                while(!pq.isEmpty() && n < 0 && k > 0){
+                    int top = pq.poll();
+                    n += top;
+                    k--;
                 }
             }
-            else {
-                sum += enemy[i];
+            if (n < 0){
+                answer = i;
+                break;
             }
         }
+        if (n >= 0){
+            answer = enemy.length;
+        }
 
-        return LEN; // return 문이 실행되지 않았으므로 끝까지 간것
+        return answer;
     }
 }
