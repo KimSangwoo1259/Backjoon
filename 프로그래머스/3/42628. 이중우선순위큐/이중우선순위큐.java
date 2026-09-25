@@ -31,7 +31,7 @@ class Solution {
 
         if (!pqASC.isEmpty() && !pqDESC.isEmpty()) {
             answer[0] = pqDESC.poll();
-            answer[1] = pqASC.poll();
+            answer[1] = pqASC.poll(); //
         }
 
         return answer;
