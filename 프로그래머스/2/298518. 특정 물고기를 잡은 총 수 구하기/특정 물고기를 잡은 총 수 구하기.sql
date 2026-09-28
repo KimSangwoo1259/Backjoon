@@ -1,5 +1,4 @@
-select count(*) as fish_count
-from fish_info as i
-join fish_name_info as n on n.fish_type = i.fish_type
-where n.fish_name in ('BASS','SNAPPER')
-
+SELECT COUNT(*) AS FISH_COUNT
+FROM FISH_INFO AS I
+JOIN FISH_NAME_INFO AS N ON N.FISH_TYPE = I.FISH_TYPE
+WHERE FISH_NAME IN ('BASS', 'SNAPPER');
