@@ -1,5 +1,5 @@
-SELECT i.animal_id, i.name
-from animal_ins as i
-join animal_outs as o on o.animal_id = i.animal_id
-where i.datetime > o.datetime
-order by i.datetime
+SELECT I.ANIMAL_ID, I.NAME
+FROM ANIMAL_INS AS I
+JOIN ANIMAL_OUTS AS O ON O.ANIMAL_ID = I.ANIMAL_ID
+WHERE I.DATETIME > O.DATETIME
+ORDER BY I.DATETIME
