@@ -1,5 +1,5 @@
-SELECT animal_type, count(animal_type) as count
-from animal_ins
-where animal_type in ('Cat','Dog')
-group by animal_type
-order by animal_type
+SELECT ANIMAL_TYPE AS ANIMAL_TYPE, COUNT(*) AS COUNT
+FROM ANIMAL_INS
+WHERE ANIMAL_TYPE IN ('Cat','Dog')
+GROUP BY ANIMAL_TYPE
+ORDER BY ANIMAL_TYPE
