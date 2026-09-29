@@ -1,5 +1,5 @@
-SELECT o.animal_id, o.name
-from animal_outs as o
-left outer join animal_ins as i on i.animal_id = o.animal_id
-where isnull(i.datetime)
-order by o.animal_id
+SELECT O.ANIMAL_ID, O.NAME
+FROM ANIMAL_OUTS AS O
+LEFT JOIN ANIMAL_INS AS I ON I.ANIMAL_ID = O.ANIMAL_ID
+WHERE I.INTAKE_CONDITION IS NULL AND SEX_UPON_OUTCOME IS NOT NULL
+ORDER BY O.ANIMAL_ID
