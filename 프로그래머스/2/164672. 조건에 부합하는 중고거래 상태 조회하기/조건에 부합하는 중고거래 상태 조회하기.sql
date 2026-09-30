@@ -1,5 +1,4 @@
-SELECT board_id, writer_id, title, price, 
-case when status = 'sale' then '판매중' when status = 'reserved' then '예약중' else '거래완료' end as status
-from used_goods_board
-where created_date like '2022-10-05%'
-order by board_id desc
+SELECT BOARD_ID, WRITER_ID, TITLE, PRICE, CASE WHEN STATUS ='SALE' THEN '판매중' WHEN STATUS ='RESERVED' THEN '예약중' ELSE '거래완료' END AS '거래상태'
+FROM USED_GOODS_BOARD
+WHERE YEAR(CREATED_DATE) = 2022 AND MONTH(CREATED_DATE) = 10 AND DAY(CREATED_DATE) = 5
+ORDER BY BOARD_ID DESC;
